@@ -2,6 +2,7 @@ use postgres::rows::Rows;
 use postgres::stmt::Statement;
 use postgres::{Connection, Error};
 
+#[derive(Debug)]
 pub struct Gateway {
     conn: Connection,
 }
@@ -11,11 +12,7 @@ impl Gateway {
         Gateway { conn }
     }
 
-    pub fn find_recognition_for(
-        &self,
-        contract_id: i64,
-        as_of: chrono::NaiveDate,
-    ) -> Result<Rows, Error> {
+    pub fn find_recognition_for(&self, contract_id: i64, as_of: chrono::NaiveDate) -> Result<Rows, Error> {
         let stmt = self.find_recognition_statement()?;
         stmt.query(&[&contract_id, &as_of])
     }
@@ -37,8 +34,7 @@ mod tests {
         let conn = Connection::connect(
             "postgresql://postgres@localhost:5432/poea_rs",
             TlsMode::None,
-        )
-        .unwrap();
+        ).unwrap();
         let gateway = Gateway::new(conn);
         let date = NaiveDate::from_ymd(2019, 3, 10);
         let result = gateway.find_recognition_for(200, date).unwrap();
