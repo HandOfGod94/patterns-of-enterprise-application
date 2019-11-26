@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 postgres = { version = "0.15.2", features = ["with-chrono"] }
 chrono = "0.4.9"
+time = "0.1"
 
 [build-dependencies]
 diesel = { version = "1.4.3", default-features = false, features = ["postgres"] }
