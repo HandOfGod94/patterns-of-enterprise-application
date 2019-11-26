@@ -55,7 +55,7 @@ impl RecognitionService {
     fn allocate(&self, money: Money, split: i64) -> Vec<Money> {
         let split = money / split;
         let mut money_bag: Vec<i64> = Vec::new();
-        for i in 0..split {
+        for _i in 0..split {
             money_bag.push(split);
         }
 

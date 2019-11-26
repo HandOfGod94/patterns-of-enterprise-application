@@ -1,5 +1,5 @@
 mod gateway;
-mod service;
+mod recognition_service;
 
 fn main() {
     println!("Hello, world!");

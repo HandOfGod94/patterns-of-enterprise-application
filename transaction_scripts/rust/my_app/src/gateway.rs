@@ -1,5 +1,4 @@
 use postgres::rows::Rows;
-use postgres::stmt::Statement;
 use postgres::{Connection, Error};
 
 type Money = i64;
