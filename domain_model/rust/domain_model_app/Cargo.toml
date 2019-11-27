@@ -1,0 +1,16 @@
+[package]
+name = "domain_model_app"
+version = "0.1.0"
+authors = ["Gahan Rakholia <gahan94rakh@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+postgres = { version = "0.15.2", features = ["with-chrono"] }
+chrono = "0.4.9"
+time = "0.1"
+
+[build-dependencies]
+diesel = { version = "1.4.3", default-features = false, features = ["postgres"] }
+dotenv = "0.15.0"
