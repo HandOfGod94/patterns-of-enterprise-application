@@ -3,10 +3,20 @@ require 'fileutils'
 
 namespace :db do
   task :create do
-    FileUtils.touch 'my_app.db'
+    FileUtils.mkdir_p 'db'
+    FileUtils.touch 'db/my_app.db'
   end
 
   task :drop do
-    FileUtils.remove_file 'my_app.db'
+    FileUtils.rm_rf 'db'
+  end
+
+  task :migrate, [:version] do |t, args|
+    require 'sequel/core'
+    Sequel.extension :migration
+    version = args[:version].to_i if args[:version]
+    Sequel.connect('sqlite://my_app.db') do |db|
+      Sequel::Migrator.run(db, 'migrations', target: version)
+    end
   end
 end

@@ -5,6 +5,6 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
-gem "sequel", "~> 5.27"
-gem 'sqlite', '~> 1.0', '>= 1.0.2'
+gem 'sequel', '~> 5.27'
+gem 'sqlite3', '~> 1.4', '>= 1.4.1'
 gem 'rake', '~> 13.0', '>= 13.0.1'
