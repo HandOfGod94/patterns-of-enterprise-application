@@ -1,0 +1,12 @@
+require 'rake/task'
+require 'fileutils'
+
+namespace :db do
+  task :create do
+    FileUtils.touch 'my_app.db'
+  end
+
+  task :drop do
+    FileUtils.remove_file 'my_app.db'
+  end
+end
