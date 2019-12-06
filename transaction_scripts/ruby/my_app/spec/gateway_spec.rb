@@ -10,14 +10,21 @@ RSpec.describe Gateway do
 
     before do
       products = sequel[:product]
-      products.insert(name: 'Word Processor', type: 'W')
-      products.insert(name: 'Spreadsheet', type: 'S')
-      products.insert(name: 'Database', type: 'D')
+      p_id1 = products.insert(name: 'Word Processor', type: 'W')
+      p_id2 = products.insert(name: 'Spreadsheet', type: 'S')
+      p_id3 = products.insert(name: 'Database', type: 'D')
 
       contracts = sequel[:contract]
-      contracts.insert(product_id: 1, revenue: 7890, date_signed: Date.today)
-      contracts.insert(product_id: 2, revenue: 6540, date_signed: Date.today)
-      contracts.insert(product_id: 3, revenue: 3210, date_signed: Date.today)
+      c_id1 = contracts.insert(product_id: p_id1, revenue: 7890, date_signed: Date.today)
+      c_id2 = contracts.insert(product_id: p_id2, revenue: 6540, date_signed: Date.today)
+      c_id3 = contracts.insert(product_id: p_id3, revenue: 3210, date_signed: Date.today)
+
+      revenue_recognitions = sequel[:revenue_recognition]
+      rr_id1 = revenue_recognitions.insert(contract_id: c_id1, amount: 8909, recognized_on: Date.today + 1)
+      rr_id2 = revenue_recognitions.insert(contract_id: c_id2, amount: 4430, recognized_on: Date.today + 2)
+      rr_id3 = revenue_recognitions.insert(contract_id: c_id3, amount: 7860, recognized_on: Date.today + 4 )
+
+
     end
 
     context 'when values are nil' do
@@ -41,12 +48,6 @@ RSpec.describe Gateway do
     context 'when values are present' do
       let(:contract_id) { 2 }
       let(:as_of) { Date.today.to_s }
-
-      before do
-        revenue_recognitions = sequel[:revenue_recognition]
-        revenue_recognitions.insert(contract_id: 1, amount: 8909, recognized_on: Date.today + 1)
-        revenue_recognitions.insert(contract_id: 2, amount: 4430, recognized_on: Date.today + 2)
-      end
 
       it 'returns list of rows' do
         expect(subject.count).to eq(2)
