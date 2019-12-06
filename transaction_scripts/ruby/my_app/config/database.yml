@@ -1,4 +1,4 @@
 host: 'localhost'
-adapter: 'sqlite'
+adapter: 'sqlite3'
 encoding: utf-8
-database: 'my_app'
+database: 'db/my_app.db'

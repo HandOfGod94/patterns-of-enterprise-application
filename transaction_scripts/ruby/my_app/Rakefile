@@ -1,22 +1,76 @@
 require 'rake/task'
+require 'active_record'
 require 'fileutils'
 
 namespace :db do
+  db_config       = YAML::load(File.open('config/database.yml'))
+
+  desc 'Create the database'
   task :create do
-    FileUtils.mkdir_p 'db'
+    FileUtils.mkdir_p 'db/migrate'
     FileUtils.touch 'db/my_app.db'
+    puts "Database created."
   end
 
+  desc "Migrate the database"
+  task :migrate do
+    ActiveRecord::Base.establish_connection(db_config)
+    migrations = ActiveRecord::Migration.new.migration_context.migrations
+    ActiveRecord::Migrator.new(:up, migrations, nil).migrate
+    Rake::Task["db:schema"].invoke
+    puts "Database migrated."
+  end
+
+  desc "Migrate the database"
+  task :rollback do
+    ActiveRecord::Base.establish_connection(db_config)
+    migrations = ActiveRecord::Migration.new.migration_context.migrations
+    ActiveRecord::Migrator.new(:down, migrations, nil).migrate
+    Rake::Task["db:schema"].invoke
+    puts "Last migration has been reverted."
+  end
+
+  desc "Drop the database"
   task :drop do
-    FileUtils.rm_rf 'db'
+    FileUtils.rm 'db/my_app.db'
+    puts "Database deleted."
   end
 
-  task :migrate, [:version] do |t, args|
-    require 'sequel/core'
-    Sequel.extension :migration
-    version = args[:version].to_i if args[:version]
-    Sequel.connect('sqlite://my_app.db') do |db|
-      Sequel::Migrator.run(db, 'migrations', target: version)
+  desc "Reset the database"
+  task :reset => [:drop, :create, :migrate]
+
+  desc 'Create a db/schema.rb file that is portable against any DB supported by AR'
+  task :schema do
+    ActiveRecord::Base.establish_connection(db_config)
+    require 'active_record/schema_dumper'
+    filename = "db/schema.rb"
+    File.open(filename, "w:utf-8") do |file|
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
     end
+  end
+
+end
+
+namespace :g do
+  desc "Generate migration"
+  task :migration do
+    name = ARGV[1] || raise("Specify name: rake g:migration your_migration")
+    timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+    path = File.expand_path("../db/migrate/#{timestamp}_#{name}.rb", __FILE__)
+    migration_class = name.split("_").map(&:capitalize).join
+
+    File.open(path, 'w') do |file|
+      file.write <<-EOF
+class #{migration_class} < ActiveRecord::Migration[4.2]
+  class << self
+    def change
+    end
+  end
+end
+      EOF
+    end
+
+    puts "Migration #{path} created"
+    abort # needed stop other tasks
   end
 end
