@@ -63,7 +63,10 @@ namespace :g do
       file.write <<-EOF
 class #{migration_class} < ActiveRecord::Migration[4.2]
   class << self
-    def change
+    def up
+    end
+    
+    def down
     end
   end
 end
