@@ -1,14 +1,14 @@
-class CreateProductTable < ActiveRecord::Migration[4.2]
+class CreateProductTable < ActiveRecord::Migration[5.0]
   class << self
     def up
-      create_table :product do |t|
+      create_table :products do |t|
         t.string :name, null: false
         t.string :type, null: false
       end
     end
 
     def down
-      drop_table :product
+      drop_table :products
     end
   end
 end
