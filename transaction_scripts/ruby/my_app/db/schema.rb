@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_120306) do
+ActiveRecord::Schema.define(version: 2019_12_06_125432) do
 
   create_table "contracts", force: :cascade do |t|
     t.integer "revenue"
@@ -22,6 +22,13 @@ ActiveRecord::Schema.define(version: 2019_12_06_120306) do
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.string "type", null: false
+  end
+
+  create_table "revenue_recognitions", primary_key: ["contracts_id", "amount"], force: :cascade do |t|
+    t.integer "contracts_id"
+    t.integer "amount"
+    t.date "recognized_on"
+    t.index ["contracts_id"], name: "index_revenue_recognitions_on_contracts_id"
   end
 
 end
