@@ -12,5 +12,5 @@ chrono = "0.4.9"
 time = "0.1"
 
 [build-dependencies]
-diesel = { version = "1.4.3", default-features = false, features = ["postgres"] }
+diesel = { version = "1.4.6", default-features = false, features = ["postgres"] }
 dotenv = "0.15.0" 
